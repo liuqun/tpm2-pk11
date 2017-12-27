@@ -65,6 +65,8 @@ parts:
     configflags:
       - --enable-unit
     build-packages:
+      - autoconf
+      - autoconf-archive
       - libc6-dev
       - libcmocka-dev
       - libdbus-1-dev
@@ -92,6 +94,8 @@ parts:
     configflags:
       - --enable-unit
     build-packages:
+      - autoconf
+      - autoconf-archive
       - g++
       - gcc
       - libc6-dev
