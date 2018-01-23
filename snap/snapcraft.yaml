@@ -67,6 +67,8 @@ parts:
     build-packages:
       - autoconf
       - autoconf-archive
+      - dbus
+      - dbus-x11
       - libc6-dev
       - libcmocka-dev
       - libdbus-1-dev
@@ -75,7 +77,8 @@ parts:
       - pkg-config
     install: |
       # Run all tests shipped by default
-      make check
+      # Using dbus-launch to provide a session bus to run unit tests
+      dbus-launch make check
     prime:
       - -include
       - -lib/pkgconfig
