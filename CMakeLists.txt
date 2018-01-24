@@ -30,3 +30,9 @@ if(TCTI_TABRMD_FOUND)
 endif()
 
 install(TARGETS tpm2-pk11 DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+aux_source_directory(./debug-tools/print-tokens debug_tools_print_tokens_SOURCES)
+add_executable(print-tokens ${debug_tools_print_tokens_SOURCES})
+set_property(TARGET print-tokens PROPERTY C_STANDARD 11)
+target_include_directories(print-tokens PRIVATE ${P11_KIT_INCLUDE_DIRS})
+target_link_libraries(print-tokens -ldl)
