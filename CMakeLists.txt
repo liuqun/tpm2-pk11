@@ -98,3 +98,10 @@ endif()
 
 install(TARGETS tpm2-pk11 DESTINATION ${P11_KIT_1_P11_MODULE_PATH})
 install(FILES ${CMAKE_BINARY_DIR}/tpm2-pk11.module DESTINATION ${P11_KIT_1_P11_MODULE_CONFIGS})
+
+# Extra debug tools
+aux_source_directory(./apps/print-tokens print_tokens_SOURCES)
+add_executable(print-tokens ${print_tokens_SOURCES})
+set_property(TARGET print-tokens PROPERTY C_STANDARD 11)
+target_include_directories(print-tokens PRIVATE ${P11_KIT_INCLUDE_DIRS})
+target_link_libraries(print-tokens ${CMAKE_DL_LIBS} ${P11_KIT_LIBRARIES})
