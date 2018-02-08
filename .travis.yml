@@ -20,9 +20,25 @@ install:
   - tar xJf autoconf-archive-2017.09.28.tar.xz && pushd autoconf-archive-2017.09.28
   - ./configure --prefix=/usr && make -j$(nproc) && sudo make install
   - popd
-  - git clone https://github.com/tpm2-software/tpm2-tss.git
+  # Note: The newest code of tpm2-tss 1.x legacy branch can also be fetched through the following git command.
+  # git clone --branch 1.x --depth 1 https://github.com/tpm2-software/tpm2-tss.git
+  # Instead of pulling things from an upstream git repo, I would prefer to download a released tarball.
+  # The latest tarball could be download from:
+  # https://github.com/tpm2-software/tpm2-tss/releases/latest
+  - v_major=1
+  - v_minor=3
+  - v_patch=0
+  - ver="$v_major.$v_minor.$v_patch"
+  - wget https://github.com/tpm2-software/tpm2-tss/releases/download/$ver/tpm2-tss-$ver.tar.gz
+  - tpm2_tss_1_2_0_sha256sum=96927dca23f4467efa2c45cd373b2d98115a13efa4ea98f740bd11bcc308400f
+  - tpm2_tss_1_3_0_sha256sum=c7d627de50394e9a02593edb1ce74e1bbac17831be726c54f689507f0c41a78a
+  - tpm2_tss_sha256sum=$(eval echo \$\{tpm2_tss_${v_major}_${v_minor}_${v_patch}_sha256sum\})
+  - sha256sum tpm2-tss-$ver.tar.gz | grep -q $tpm2_tss_sha256sum
+  - tar xzf tpm2-tss-$ver.tar.gz && ln -s tpm2-tss-$ver tpm2-tss
   - pushd tpm2-tss
-  - ./bootstrap && ./configure && make -j$(nproc)
+  - if ! test -x configure ; then ./bootstrap && chmod +x configure ; fi
+  - ./configure --prefix=/usr/local --disable-shared
+  - make -j$(nproc)
   - sudo make install
   - popd
 
