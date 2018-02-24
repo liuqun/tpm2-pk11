@@ -104,6 +104,7 @@ parts:
       - gcc
       - libc6-dev
       - libcmocka-dev
+      - libgcrypt20-dev
       - liburiparser-dev
       - libtool
     install: |
