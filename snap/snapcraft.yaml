@@ -51,6 +51,7 @@ parts:
     plugin: cmake
     build-packages:
       - libp11-kit-dev
+      - libtasn1-dev
 
   tpm2-abrmd:
     # Note: The latest official release can be downloaded from:
