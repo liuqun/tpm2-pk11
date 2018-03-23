@@ -114,7 +114,7 @@ parts:
   tpm2-tools:
     # Note: The latest official release can be downloaded from:
     # https://github.com/tpm2-software/tpm2-tools/releases/latest
-    source: https://github.com/tpm2-software/tpm2-tools.git
+    source: https://github.com/liuqun/tpm2-tools.git
     source-type: git
     source-branch: master
     source-depth: 1
