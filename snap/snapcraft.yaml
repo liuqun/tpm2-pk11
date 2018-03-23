@@ -1,0 +1,143 @@
+name: tpm2-pk11
+version: '1.0'
+summary: PKCS#11 cryptoki service provider for TPM 2.0 chips
+description: |
+  tpm2-pk11 is free software licensed under GNU LGPL v2.1
+  See https://github.com/irtimmer/tpm2-pk11/
+  Your TPM 2.0 chip "/dev/tpm0" will be used to secure your SSH private keys.
+  Related projects
+  * Canonical's TPM2 snapcraft project at https://git.launchpad.net/~snappy-hwe-team/snappy-hwe-snaps/+git/tpm2
+grade: devel
+confinement: devmode
+
+apps:
+  ssh:
+    command: ssh
+    plugs: [network]
+  scp:
+    command: scp
+    plugs: [network]
+  sftp:
+    command: sftp
+    plugs: [network]
+  ssh-add:
+    command: ssh-add
+    plugs: [network]
+  ssh-agent:
+    command: ssh-agent
+    plugs: [network]
+  ssh-keygen:
+    command: ssh-keygen
+    plugs: [network]
+  ssh-keyscan:
+    command: ssh-keyscan
+    plugs: [network]
+
+parts:
+  openssh-client:
+    # Portable OpenSSH under BSD licence, see https://github.com/openssh/openssh-portable/blob/master/LICENCE
+    # And its snapcraft project written by Marius Gripsgard at https://github.com/mariogrip/openssh
+    source: .
+    after: [openssh]
+    plugin: nil
+
+  libtpm2-pk11:
+    source: .
+    after:
+      - tpm2-tss
+      - tpm2-abrmd
+    plugin: cmake
+    build-packages:
+      - libp11-kit-dev
+      - libtasn1-dev
+
+  tpm2-abrmd:
+    # Note: The latest official release can be downloaded from:
+    # https://github.com/tpm2-software/tpm2-abrmd/releases/latest
+    # Tracking un-releassed versoin of tpm2-abrmd from GitHub
+    source: https://github.com/tpm2-software/tpm2-abrmd.git
+    source-type: git
+    source-branch: master
+    after:
+      - tpm2-tss
+    plugin: autotools
+    configflags:
+      - --enable-unit
+    build-packages:
+      - autoconf
+      - autoconf-archive
+      - dbus
+      - dbus-x11
+      - libc6-dev
+      - libcmocka-dev
+      - libdbus-1-dev
+      - libglib2.0-dev
+      - libtool
+      - pkg-config
+    install: |
+      # Run all tests shipped by default
+      # Using dbus-launch to provide a session bus to run unit tests
+      dbus-launch make check
+    prime:
+      - -include
+      - -lib/pkgconfig
+      - -share/man
+
+  tpm2-tss:
+    # Note: The latest official release can be downloaded from:
+    # https://github.com/tpm2-software/tpm2-tss/releases/latest
+    source: https://github.com/tpm2-software/tpm2-tss.git
+    source-type: git
+    source-branch: master
+    source-depth: 1
+    plugin: autotools
+    configflags:
+      - --enable-unit
+    build-packages:
+      - autoconf
+      - autoconf-archive
+      - g++
+      - gcc
+      - libc6-dev
+      - libcmocka-dev
+      - libgcrypt20-dev
+      - liburiparser-dev
+      - libtool
+    install: |
+      # Run all tests shipped by default
+      make check
+    prime:
+      - -include
+      - -lib/pkgconfig
+      - -share/man
+
+  tpm2-tools:
+    # Note: The latest official release can be downloaded from:
+    # https://github.com/tpm2-software/tpm2-tools/releases/latest
+    source: https://github.com/tpm2-software/tpm2-tools.git
+    source-type: git
+    source-branch: master
+    source-depth: 1
+    after:
+      - tpm2-tss
+      - tpm2-abrmd
+    plugin: autotools
+    configflags:
+      - --enable-unit
+    build-packages:
+      - autoconf
+      - autoconf-archive
+      - automake
+      - gcc
+      - libc6-dev
+      - libcmocka-dev
+      - libcurl4-openssl-dev
+      - libssl-dev
+      - libtool
+      - pandoc
+      - pkg-config
+    prime:
+      - -include
+    install: |
+      # Run all tests shipped by default
+      make check
