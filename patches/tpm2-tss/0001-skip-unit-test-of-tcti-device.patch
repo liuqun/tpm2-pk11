@@ -1,0 +1,14 @@
+From: Liu Qun <qunliu@zyhx-group.com>
+Subject: Ignore test/unit/tcti-device on Raspberry Pi
+
+diff --git a/Makefile-test.am b/Makefile-test.am
+--- a/Makefile-test.am
++++ b/Makefile-test.am
+@@ -46,7 +46,6 @@ TESTS_UNIT  = \
+     test/unit/CopyCommandHeader \
+     test/unit/GetNumHandles \
+     test/unit/io \
+-    test/unit/tcti-device \
+     test/unit/tcti-mssim \
+     test/unit/UINT8-marshal \
+     test/unit/UINT16-marshal \
