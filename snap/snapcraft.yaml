@@ -90,6 +90,8 @@ parts:
     source-type: git
     source-branch: master
     source-depth: 1
+    prepare: |
+      patch -Np1 < ../../../patches/tpm2-tss/0001-skip-unit-test-of-tcti-device.patch
     plugin: autotools
     configflags:
       - --enable-unit
