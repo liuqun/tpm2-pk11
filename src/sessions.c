@@ -121,6 +121,27 @@ int session_init(struct session* session, struct config *config) {
   TSS2_ABI_VERSION abi_version;
   guess_tss2_abi_version(&abi_version);
   rc = Tss2_Sys_Initialize(session->context, size, tcti_ctx, &abi_version);
+  switch (rc) {
+    case TSS2_RC_SUCCESS:
+      break;
+    case TSS2_SYS_RC_BAD_REFERENCE:
+      // When we are building against old tpm2-tss (v1.0 to v1.4) which does
+      // not support `TSS2_SYS_RC_ABI_MISMATCH`, we may get a return code
+      // `TSS2_SYS_RC_BAD_REFERENCE` instead of the expected return code
+      // `TSS2_SYS_RC_ABI_MISMATCH`.
+      break;
+    case TSS2_SYS_RC_ABI_MISMATCH:
+      // There is a feature that allow NULL ptr to suppress ABI version check.
+      // This was supported in the latest 2.x branch of tpm2-tss since:
+      // https://github.com/tpm2-software/tpm2-tss/commit/28164ade0e00c0177bec85f74440a36dbd7de877
+      rc = Tss2_Sys_Initialize(session->context, size, tcti_ctx, NULL);
+      break;
+    default:
+      break;
+  }
+  if (rc != TSS2_RC_SUCCESS) {
+    goto cleanup;
+  }
 
   session->objects = object_load(session->context, config);
   open_sessions++;
