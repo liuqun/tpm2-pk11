@@ -1,5 +1,5 @@
 create_key() {
-    tpm2_createprimary -H o -g sha256 -G rsa -C po.ctx
+    tpm2_createprimary --hierarchy o -g sha256 -G rsa -C po.ctx
     tpm2_create -c po.ctx -g sha256 -G rsa -u key.pub -r key.priv
     tpm2_load -c po.ctx -u key.pub -r key.priv -C obj.ctx
     tpm2_evictcontrol -A o -c obj.ctx -H 0x81010010
