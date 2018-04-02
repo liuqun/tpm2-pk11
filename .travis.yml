@@ -4,11 +4,11 @@ compiler:
   - clang-3.8
 
 env:
-  - TSS_BRANCH=master TPM2_TOOLS_BRANCH=master TSS_CONFIGURATIONS=--disable-esapi TCTI=mssim
+  - TSS_BRANCH=master TPM2_TOOLS_BRANCH=master TPM2_TOOLS_CUSTMIZED_VERSION=d6bfec4edd3db02f73cfd0cc73b37f7981afd854 TSS_CONFIGURATIONS=--disable-esapi TCTI=mssim
 
 matrix:
   include:
-    env: TSS_BRANCH=1.x TPM2_TOOLS_BRANCH=3.0.3 TSS_CONFIGURATIONS= TCTI=socket
+    env: TSS_BRANCH=1.x TPM2_TOOLS_BRANCH=3.0.3 TPM2_TOOLS_CUSTMIZED_VERSION=HEAD TSS_CONFIGURATIONS= TCTI=socket
 
 sudo: required
 dist: trusty
@@ -62,6 +62,7 @@ install:
     # build tpm2-tools - needed for testing
   - git clone https://github.com/tpm2-software/tpm2-tools.git --branch $TPM2_TOOLS_BRANCH
   - pushd tpm2-tools
+  - git checkout $TPM2_TOOLS_CUSTMIZED_VERSION
   - ./bootstrap && ./configure --disable-dlclose && make -j$(nproc) && sudo make install
   - popd
     # setup travis environment for testing.
