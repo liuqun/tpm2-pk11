@@ -2,6 +2,11 @@
 
 load test_util
 
+@test "libtpm2-pk11.so is loadable" {
+    run ./print-tokens
+    echo $output > "./print-tokens.log"
+    [ ${status} -eq 0 ]
+}
 @test "Confirm SSH client functionality" {
     create_key
     run ssh-keygen -D ./libtpm2-pk11.so
