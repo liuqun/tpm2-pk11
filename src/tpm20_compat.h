@@ -35,8 +35,8 @@
 #ifdef TCTI_MSSIM_ENABLED
 #include <tss2/tss2_tcti_mssim.h>
 #endif /* TCTI_SOCKET_ENABLED */
-#ifdef TCTI_MSSIM_ENABLED
-#include <tcti/tss2-tcti-tabrmd.h>
+#ifdef TCTI_TABRMD_ENABLED
+#include <tss2/tss2-tcti-tabrmd.h>
 #endif /* TCTI_TABRMD_ENABLED */
 #else /* TSS_COMPAT */
 #include <sapi/tpm20.h>
